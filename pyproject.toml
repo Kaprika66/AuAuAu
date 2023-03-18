@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "auauau"
+version = "0.1.0"
+description = ""
+authors = ["WojciechBogobowicz <32848549+WojciechBogobowicz@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+ase = "^3.22.1"
+scipy = "^1.10.1"
+matplotlib = "^3.7.1"
+black = "^23.1.0"
+pre-commit = "^3.2.0"
+numpy = "^1.24.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

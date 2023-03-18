@@ -1,0 +1,9 @@
+name: poetry_env
+
+dependencies:
+- python=3.11
+- ipykernel
+- pip
+- pip:
+  - poetry
+  - tomli
