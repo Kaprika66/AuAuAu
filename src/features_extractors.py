@@ -59,35 +59,50 @@ def add_dst_feature(df: pd.DataFrame, idx1, idx2):
     df[feature_name] = df["obj"].apply(lambda p: p.get_distance(idx1, idx2))
 
 
+@function_manipulators.assert_proper_input("df", __check_df)
+def add_benzene_dst_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
+    df["benzene_dst"] = df["obj"].apply(
+        lambda p: get_benzene_dst(p, benzene1_idxs, benzene2_idxs)
+    )
+
+
+@function_manipulators.assert_proper_input("df", __check_df)
+def add_benzene_cossq_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
+    df["benzene_cossq"] = df["obj"].apply(
+        lambda p: cos_between_planes(p, benzene1_idxs, benzene2_idxs)**2
+    )
+
+
+
 # Particle manipulators
 
 
-def get_benzine_dst(particle: ase.atoms.Atoms, benzene1_idxes, benzene2_idxes):
-    benzene1_center = np.mean(particle.positions[benzene1_idxes], axis=0)
-    benzene2_center = np.mean(particle.positions[benzene2_idxes], axis=0)
+def get_benzene_dst(particle: ase.atoms.Atoms, benzene1_idxs, benzene2_idxs):
+    benzene1_center = np.mean(particle.positions[benzene1_idxs], axis=0)
+    benzene2_center = np.mean(particle.positions[benzene2_idxs], axis=0)
     return np.linalg.norm(benzene1_center - benzene2_center)
 
 
-def angle_between_planes(particle: ase.atoms.Atoms, plane1_idxes, plane2_idxes):
-    normal_vec1 = calculate_perpendicular_vector(particle, plane1_idxes)
-    normal_vec2 = calculate_perpendicular_vector(particle, plane2_idxes)
-    return angle_between(normal_vec1, normal_vec2)
+def cos_between_planes(particle: ase.atoms.Atoms, plane1_idxs, plane2_idxs):
+    normal_vec1 = calculate_perpendicular_vector(particle, plane1_idxs)
+    normal_vec2 = calculate_perpendicular_vector(particle, plane2_idxs)
+    return cos_between(normal_vec1, normal_vec2)
 
 
-def calculate_perpendicular_vector(particle: ase.atoms.Atoms, plane_idxes):
-    idx_0, idx_1, idx_2 = plane_idxes
+def calculate_perpendicular_vector(particle: ase.atoms.Atoms, plane_idxs):
+    idx_0, idx_1, idx_2 = plane_idxs
     v1 = particle.positions[idx_0] - particle.positions[idx_1]
     v2 = particle.positions[idx_2] - particle.positions[idx_1]
     return np.cross(v1, v2)
 
 
-def get_particle_symbols(particle: ase.atoms.Atoms, *idxes):
-    return [particle.get_chemical_symbols()[idx] for idx in idxes]
+def get_particle_symbols(particle: ase.atoms.Atoms, *idxs):
+    return [particle.get_chemical_symbols()[idx] for idx in idxs]
 
 
-def generate_feature_id(particle: ase.atoms.Atoms, *idxes):
-    symbols = get_particle_symbols(particle, *idxes)
-    return "".join([f"{s}{idx}" for s, idx in zip(symbols, idxes)])
+def generate_feature_id(particle: ase.atoms.Atoms, *idxs):
+    symbols = get_particle_symbols(particle, *idxs)
+    return "".join([f"{s}{idx}" for s, idx in zip(symbols, idxs)])
 
 
 # Lin. alg. helpers
@@ -108,6 +123,17 @@ def angle_between(v1, v2):
     >>> angle_between((1, 0, 0), (-1, 0, 0))
     3.141592653589793
     """
+    cos = cos_between(v1, v2)
+    return cos_to_angle(cos)
+
+
+def cos_between(v1, v2):
+    """Returns the cossinus between vectors 'v1' and 'v2'::
+    """
     v1_u = unit_vector(v1)
     v2_u = unit_vector(v2)
-    return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
+    return np.dot(v1_u, v2_u)
+
+
+def cos_to_angle(cos):
+    return np.arccos(np.clip(cos, -1.0, 1.0))
