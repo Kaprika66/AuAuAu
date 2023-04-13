@@ -18,21 +18,41 @@ import ase.atoms
 import numpy as np
 import pandas as pd
 
+import src.function_manipulators as function_manipulators
+
 # Dataframe manipulators
 
 
+def __check_df(df):
+    if not isinstance(df, pd.DataFrame):
+        raise ValueError("df should be pandas DataFrame object.")
+
+    if 'obj' not in df.columns:
+        raise ValueError("df not contain 'obj' column.")
+
+    if len(df['obj']) < 1:
+        raise ValueError("'obj' column need at least one element but it is empty")
+
+    are_atoms_type = df['obj'].apply(lambda x: isinstance(x, ase.atoms.Atoms))
+    if not np.all(are_atoms_type):
+        raise ValueError("Elements of 'obj' column should be ase.atoms.Atoms type")
+
+
+@function_manipulators.assert_proper_input("df", __check_df)
 def add_angle_feature(df: pd.DataFrame, idx1, idx2, idx3):
     particle = df.loc[0, "obj"]
     feature_name = f"ang{generate_feature_id(particle, idx1, idx2, idx3)}"
     df[feature_name] = df["obj"].apply(lambda p: p.get_angle(idx1, idx2, idx3))
 
 
+@function_manipulators.assert_proper_input("df", __check_df)
 def add_dihedral_feature(df: pd.DataFrame, idx1, idx2, idx3, idx4):
     particle = df.loc[0, "obj"]
     feature_name = f"dih{generate_feature_id(particle, idx1, idx2, idx3, idx4)}"
     df[feature_name] = df["obj"].apply(lambda p: p.get_dihedral(idx1, idx2, idx3, idx4))
 
 
+@function_manipulators.assert_proper_input("df", __check_df)
 def add_dst_feature(df: pd.DataFrame, idx1, idx2):
     particle = df.loc[0, "obj"]
     feature_name = f"dst{generate_feature_id(particle, idx1, idx2)}"
@@ -49,12 +69,12 @@ def get_benzine_dst(particle: ase.atoms.Atoms, benzene1_idxes, benzene2_idxes):
 
 
 def angle_between_planes(particle: ase.atoms.Atoms, plane1_idxes, plane2_idxes):
-    normal_vec1 = calculate_normal_vector(particle, plane1_idxes)
-    normal_vec2 = calculate_normal_vector(particle, plane2_idxes)
+    normal_vec1 = calculate_perpendicular_vector(particle, plane1_idxes)
+    normal_vec2 = calculate_perpendicular_vector(particle, plane2_idxes)
     return angle_between(normal_vec1, normal_vec2)
 
 
-def calculate_normal_vector(particle: ase.atoms.Atoms, plane_idxes):
+def calculate_perpendicular_vector(particle: ase.atoms.Atoms, plane_idxes):
     idx_0, idx_1, idx_2 = plane_idxes
     v1 = particle.positions[idx_0] - particle.positions[idx_1]
     v2 = particle.positions[idx_2] - particle.positions[idx_1]
