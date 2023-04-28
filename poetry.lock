@@ -245,7 +245,7 @@ pycparser = "*"
 name = "cfgv"
 version = "3.3.1"
 description = "Validate configuration and produce human readable error messages."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6.1"
 files = [
@@ -513,7 +513,7 @@ files = [
 name = "distlib"
 version = "0.3.6"
 description = "Distribution utilities"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 files = [
@@ -540,7 +540,7 @@ tests = ["asttokens", "littleutils", "pytest", "rich"]
 name = "filelock"
 version = "3.10.0"
 description = "A platform independent file lock."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -762,7 +762,7 @@ numpy = ">=1.14.5"
 name = "identify"
 version = "2.5.21"
 description = "File identification library for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1288,7 +1288,7 @@ files = [
 name = "nodeenv"
 version = "1.7.0"
 description = "Node.js virtual environment builder"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*"
 files = [
@@ -1599,7 +1599,7 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest (>=7.2.1)", "pytes
 name = "pre-commit"
 version = "3.2.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
@@ -1830,7 +1830,7 @@ files = [
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -2426,7 +2426,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 name = "virtualenv"
 version = "20.21.0"
 description = "Virtual Python Environment builder"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2577,4 +2577,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "2460d8578ee989e28f41b4ee363e5a911da1d427497f4759d293a9d384f0be16"
+content-hash = "8dee15c9a2d4fb3acbd5815dfad1e81f26313d9641b1e489fe85614851af756b"
