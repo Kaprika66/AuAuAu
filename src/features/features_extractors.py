@@ -15,13 +15,13 @@ Contains linear algebra functions that I wasn't able to find in ASE.atoms docume
 """
 
 import ase.atoms
+import joblib
 import numpy as np
 import pandas as pd
 
 import src.function_manipulators as function_manipulators
 
 # Dataframe manipulators
-
 
 def __check_df(df):
     if not isinstance(df, pd.DataFrame):
@@ -56,6 +56,10 @@ def add_dihedral_feature(df: pd.DataFrame, idx1, idx2, idx3, idx4):
 def add_dst_feature(df: pd.DataFrame, idx1, idx2):
     particle = df.loc[0, "obj"]
     feature_name = f"dst{generate_feature_id(particle, idx1, idx2)}"
+    # dst = joblib.delayed(lambda p: p.get_distance(idx1, idx2))
+    # df[feature_name] = joblib.Parallel(
+    #     n_jobs=-1)(dst(p) for p in df["obj"]
+    # )
     df[feature_name] = df["obj"].apply(lambda p: p.get_distance(idx1, idx2))
 
 
@@ -71,7 +75,6 @@ def add_benzene_cossq_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
     df["benzene_cossq"] = df["obj"].apply(
         lambda p: cos_between_planes(p, benzene1_idxs, benzene2_idxs)**2
     )
-
 
 
 # Particle manipulators

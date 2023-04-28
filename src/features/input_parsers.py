@@ -1,9 +1,35 @@
 """This module contains functions used for comments parsing.
 """
 
+import ase
+import joblib
 import pandas as pd
 
-__all__ = ["get_comments_df"]
+__all__ = ["get_comments_df", "read_raw_data"]
+
+
+
+def read_raw_data(
+    particles_path: str, transports_path: str, cache_path: str
+) -> pd.DataFrame:
+    """Reads data from cache file or create it by itself.
+
+    Args:
+        particles_path (str): Path to .xyz file with atoms definitions.
+        transports_path (str): Path to .trans file.
+        cache_path (str): Path where parsed data will be stored for future runs
+
+    Returns:
+        pd.DataFrame: Data frame with two columns: 'obj', 'y'.
+            obj contains ase.Atoms object and y floats from 0 to 1.
+    """
+    @joblib.Memory(cache_path).cache
+    def cached_reader(particles_path, transport_path):
+        return pd.DataFrame({
+                "obj": ase.io.iread(particles_path),
+                "y": pd.read_csv(transport_path, header=None)[0],
+        })
+    return cached_reader(particles_path, transports_path)
 
 
 def get_comments_df(file_path: str) -> pd.DataFrame:
@@ -39,7 +65,7 @@ def _load_lines_after_specified_one(path: str, specified_line: str) -> list[str]
     comments = []
     next_line_is_comment = False
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             if next_line_is_comment:
                 comments.append(line.strip())
