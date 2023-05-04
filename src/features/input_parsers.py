@@ -5,9 +5,12 @@ import ase
 import joblib
 import pandas as pd
 
-__all__ = ["get_comments_df", "read_raw_data"]
+__all__ = ["get_comments_df", "read_raw_data", "ParsedComments"]
 
 
+# def parse_feature_name(feature_name: str) -> tuple[str, tuple]:
+#     #ToDo
+#     raise NotImplementedError("This function still needed to be implemented")
 
 def read_raw_data(
     particles_path: str, transports_path: str, cache_path: str
@@ -35,7 +38,7 @@ def read_raw_data(
 def get_comments_df(file_path: str) -> pd.DataFrame:
     """Load and parse xyz file. This is not general purpose function!
     It is designed to work with xyz file that contains:
-    All atoms with 42 positions and comments in format:
+    Atoms with 42 positions and comments in format:
         - id
         - total energy
         - fermi energy
