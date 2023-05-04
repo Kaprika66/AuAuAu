@@ -1,7 +1,6 @@
 import functools
 import inspect
-import re
-from typing import Callable, Iterable
+from typing import Callable
 
 
 def assert_proper_input(arg_name: str, arg_checker: Callable):
@@ -34,60 +33,3 @@ def __find_arg_index(func: Callable, arg_name: str) -> int | None:
     """
     arg_names = inspect.signature(func).parameters.keys()
     return next((i for i, arg in enumerate(arg_names) if arg==arg_name), None)
-
-
-class FuncFactory:
-    def __init__(self, module, regex: str) -> None:
-        self._functions = self._load_extractors(module, regex)
-
-    def execute_func(self, func_name: str, *args, **kwargs) -> any:
-        return self.functions[func_name](*args, **kwargs)
-
-    def _load_extractors(self, base_module, regex: str):
-        functions = self._module_functions(base_module)
-        filtered_functions = self._filter_functions(functions, regex)
-        return dict(filtered_functions)
-
-    def _module_functions(self, module):
-        submodules = self._submodules_iter(module)
-        all_functions = []
-        for _, module in [("base_module", module)] + submodules:
-            all_functions.extend(inspect.getmembers(
-            module, inspect.isfunction
-            ))
-        return all_functions
-
-    def _submodules_iter(self, module):
-        return inspect.getmembers(
-            module, inspect.ismodule
-        )
-
-    def _filter_functions(self, functions: list[str, Callable], regex: str) -> Iterable[tuple[str, Callable]]:
-        return filter(
-            lambda t: bool(re.search(regex, t[0])),
-            functions
-        )
-
-    @property
-    def functions(self) -> dict[str, Callable]:
-        """
-        Returns:
-            dict[str, Callable]: dict with functions as values and theirs names as keys.
-        """
-        return self._functions
-
-
-
-def main():
-    import importlib
-    import sys
-    sys.path.append(".")
-    features = importlib.import_module("features")
-
-    factory = FuncFactory(features, r"^add_\w*_feature$")
-    for extractor in factory.functions.items():
-        print(extractor)
-
-
-if __name__ == "__main__":
-    main()
