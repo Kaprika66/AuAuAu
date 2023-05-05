@@ -20,7 +20,6 @@ def assert_proper_input(arg_name: str, arg_checker: Callable):
     return get_decorator
 
 
-
 def __find_arg_index(func: Callable, arg_name: str) -> int | None:
     """Return index of function argument
 

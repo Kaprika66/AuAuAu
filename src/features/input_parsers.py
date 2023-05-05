@@ -5,7 +5,7 @@ import ase
 import joblib
 import pandas as pd
 
-__all__ = ["get_comments_df", "read_raw_data", "ParsedComments"]
+__all__ = ["get_comments_df", "read_raw_data"]
 
 
 # def parse_feature_name(feature_name: str) -> tuple[str, tuple]:

@@ -817,6 +817,17 @@ files = [
 numpy = ">=1.14.5"
 
 [[package]]
+name = "hydra"
+version = "2.5"
+description = "A high performance persistent bloom filter"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "Hydra-2.5.tar.gz", hash = "sha256:247091b9c279c77686ea995f0f07070a28870c1942959b1474ad57076074384a"},
+]
+
+[[package]]
 name = "identify"
 version = "2.5.21"
 description = "File identification library for Python"
@@ -2773,4 +2784,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "3d583ed4b34800fc05b1ad52fa17d1943758df7cbfc8131cc5736a80507b1406"
+content-hash = "ed3d0a0900b80ef7635d240b0f5666e652f5c76cdd8ff29a878a60686f10ecb5"
