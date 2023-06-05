@@ -1,5 +1,6 @@
 *draft*
 data/*
 *__pycache__*
+outputs/
 
 !*.gitkeep

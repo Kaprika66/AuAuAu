@@ -1,7 +1,7 @@
-name: poetry_env
+name: auau_env
 
 dependencies:
-- python=3.11
+- python=3.10
 - ipykernel
 - pip
 - pip:
