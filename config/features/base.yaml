@@ -1,0 +1,120 @@
+# Default handcrafted features
+
+- signature: benzene_dst
+  alias: benzene_dst
+  atoms_idxs: []
+- signature: benzene_cossq
+  alias: benzene_cossq
+  atoms_idxs: []
+- signature: dstAu32Au9
+  alias: dst
+  atoms_idxs:
+  - 32
+  - 9
+- signature: dstC20C21
+  alias: dst
+  atoms_idxs:
+  - 20
+  - 21
+- signature: dstS31Au32
+  alias: dst
+  atoms_idxs:
+  - 31
+  - 32
+- signature: dstAu32Au33
+  alias: dst
+  atoms_idxs:
+  - 32
+  - 33
+- signature: dstC30S31
+  alias: dst
+  atoms_idxs:
+  - 30
+  - 31
+- signature: dstC27H29
+  alias: dst
+  atoms_idxs:
+  - 27
+  - 29
+- signature: dstC15C17
+  alias: dst
+  atoms_idxs:
+  - 15
+  - 17
+- signature: angAu32S31C30
+  alias: ang
+  atoms_idxs:
+  - 32
+  - 31
+  - 30
+- signature: angAu9S10C11
+  alias: ang
+  atoms_idxs:
+  - 9
+  - 10
+  - 11
+- signature: angAu33Au32S31
+  alias: ang
+  atoms_idxs:
+  - 33
+  - 32
+  - 31
+- signature: angAu32C21Au9
+  alias: ang
+  atoms_idxs:
+  - 32
+  - 21
+  - 9
+- signature: angC20H22H23
+  alias: ang
+  atoms_idxs:
+  - 20
+  - 22
+  - 23
+- signature: angC21C24C26
+  alias: ang
+  atoms_idxs:
+  - 21
+  - 24
+  - 26
+- signature: angC24C25C27
+  alias: ang
+  atoms_idxs:
+  - 24
+  - 25
+  - 27
+- signature: angC27C30S31
+  alias: ang
+  atoms_idxs:
+  - 27
+  - 30
+  - 31
+- signature: angS31Au33Au35
+  alias: ang
+  atoms_idxs:
+  - 31
+  - 33
+  - 35
+- signature: dihAu32S31C30C26
+  alias: dih
+  atoms_idxs:
+  - 32
+  - 31
+  - 30
+  - 26
+- signature: dihAu7Au9S10C11
+  alias: dih
+  atoms_idxs:
+  - 7
+  - 9
+  - 10
+  - 11
+- signature: fermi_energy
+  alias: fermi_energy
+  atoms_idxs: []
+- signature: total_energy
+  alias: total_energy
+  atoms_idxs: []
+- signature: homo_lumo_diff
+  alias: homo_lumo_diff
+  atoms_idxs: []

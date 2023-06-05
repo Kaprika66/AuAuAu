@@ -17,7 +17,10 @@ Contains linear algebra functions that I wasn't able to find in ASE.atoms docume
 import ase.atoms
 import numpy as np
 import pandas as pd
+from dynamic_factory import FuncFactory
 
+import config.paths as PATHS
+import src.features.input_parsers as input_parsers
 import src.function_manipulators as function_manipulators
 
 # Dataframe manipulators
@@ -37,7 +40,7 @@ def __check_df(df: pd.DataFrame):
     if not np.all(are_atoms_type):
         raise ValueError("Elements of 'obj' column should be ase.atoms.Atoms type")
 
-
+@FuncFactory.register("ang")
 @function_manipulators.assert_proper_input("df", __check_df)
 def add_ang_feature(df: pd.DataFrame, idx1, idx2, idx3):
     """Calculate angle between three atoms and append it to dataframe
@@ -49,14 +52,14 @@ def add_ang_feature(df: pd.DataFrame, idx1, idx2, idx3):
         idx2 (int): atom index
         idx3 (int): atom index
     """
-    __add_universal_feature(
+    add_universal_feature(
         df,
         ase.Atoms.get_angle,
         "ang",
         *(idx1, idx2, idx3),
     )
 
-
+@FuncFactory.register("dih")
 @function_manipulators.assert_proper_input("df", __check_df)
 def add_dih_feature(df: pd.DataFrame, idx1, idx2, idx3, idx4):
     """Calculate dihedral angle between four atoms and append it to dataframe
@@ -69,7 +72,7 @@ def add_dih_feature(df: pd.DataFrame, idx1, idx2, idx3, idx4):
         idx3 (int): atom index
         idx4 (int): atom index
     """
-    __add_universal_feature(
+    add_universal_feature(
         df,
         ase.Atoms.get_dihedral,
         "dih",
@@ -77,6 +80,7 @@ def add_dih_feature(df: pd.DataFrame, idx1, idx2, idx3, idx4):
     )
 
 
+@FuncFactory.register("dst")
 @function_manipulators.assert_proper_input("df", __check_df)
 def add_dst_feature(df: pd.DataFrame, idx1, idx2):
     """Calculate distance between two atoms and append it to dataframe
@@ -87,31 +91,42 @@ def add_dst_feature(df: pd.DataFrame, idx1, idx2):
         idx1 (int): index of atom
         idx2 (int): index of atom
     """
-    __add_universal_feature(
+    add_universal_feature(
         df,
         ase.Atoms.get_distance,
         "dst",
         *(idx1, idx2),
     )
 
-
+@FuncFactory.register("benzene_dst")
 @function_manipulators.assert_proper_input("df", __check_df)
-def add_benzene_dst_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
+def add_benzene_dst_feature(
+        df: pd.DataFrame,
+        benzene1_idxs=(11, 14, 15, 16, 17, 20),
+        benzene2_idxs=(21, 24, 25, 26, 27, 30),
+    ):
     """Calculate distance between benzenes
         and add it to dataframe as column with name benzene_dst
 
     Args:
         df (pd.DataFrame): _description_
         benzene1_idxs (tuple[int*6]): all indexes of first benzene
-        benzene2_idxs (tuple[int*6]): all indexes of second benzene
+    benzene2_idxs (tuple[int*6]): all indexes of second benzene
     """
+    benzene1_idxs = np.array(benzene1_idxs)
+    benzene2_idxs = np.array(benzene2_idxs)
     df["benzene_dst"] = df["obj"].apply(
         lambda p: get_benzene_dst(p, benzene1_idxs, benzene2_idxs)
     )
 
 
+@FuncFactory.register("benzene_cossq")
 @function_manipulators.assert_proper_input("df", __check_df)
-def add_benzene_cossq_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
+def add_benzene_cossq_feature(
+        df: pd.DataFrame,
+        benzene1_idxs=(14, 15, 16),
+        benzene2_idxs=(25, 26, 27),
+    ):
     """Calculate cossinus square of benzene twist angle
         and add it to dataframe as column with name benzene_cossq
 
@@ -120,28 +135,51 @@ def add_benzene_cossq_feature(df: pd.DataFrame, benzene1_idxs, benzene2_idxs):
         benzene1_idxs (tuple[int, int, int]): Three indices from benzene.
         benzene2_idxs (tuple[int, int, int]): Three indices from benzene.
     """
+    benzene1_idxs = np.array(benzene1_idxs)
+    benzene2_idxs = np.array(benzene2_idxs)
     df["benzene_cossq"] = df["obj"].apply(
         lambda p: cos_between_planes(p, benzene1_idxs, benzene2_idxs) ** 2
     )
 
 
-def __add_universal_feature(df, func, name_prefix: str, *idxs):
+def add_universal_feature(df, func, name_prefix: str, *idxs):
     particle = df.loc[0, "obj"]
     feature_name = f"{name_prefix}{generate_feature_id(particle, *idxs)}"
     df[feature_name] = df["obj"].apply(lambda p: func(p, *idxs))
 
 
 def add_comment_feature(
-    df: pd.DataFrame, comment_df: pd.DataFrame, feature: str
+    df: pd.DataFrame, feature: str
 ) -> None:
-    """
+    """Add feature from comments dataframe.
 
     Args:
-        df (pd.DataFrame): _description_
-        comment_df (pd.DataFrame): _description_
-        feature (str): _description_
+        df (pd.DataFrame): DataFrame with column 'obj' containing ase.Atoms obj
+        feature (str): name of feature
     """
-    df[feature] = comment_df[feature]
+    comments_df = input_parsers.get_comments_df(PATHS.PARTICLES_FILE)
+    df[feature] = comments_df[feature]
+
+
+@FuncFactory.register("fermi_energy")
+@function_manipulators.assert_proper_input("df", __check_df)
+def add_fermi_energy_feature(df: pd.DataFrame):
+    add_comment_feature(df, "fermi_energy")
+
+
+@FuncFactory.register("total_energy")
+@function_manipulators.assert_proper_input("df", __check_df)
+def add_total_energy_feature(df: pd.DataFrame):
+    add_comment_feature(df, "total_energy")
+
+
+@FuncFactory.register("homo_lumo_diff")
+@function_manipulators.assert_proper_input("df", __check_df)
+def add_homolumo_feature(df: pd.DataFrame):
+    comments_df = input_parsers.get_comments_df(PATHS.PARTICLES_FILE)
+    df["homo_lumo_diff"] = (
+        comments_df["energy_level_130"] - comments_df["energy_level_131"]
+    )
 
 
 # Particle manipulators

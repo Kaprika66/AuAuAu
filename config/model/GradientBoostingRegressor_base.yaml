@@ -1,0 +1,5 @@
+creation_str: sklearn.ensemble._gb.GradientBoostingRegressor(ccp_alpha=0,learning_rate=0.2,max_depth=4,max_features='sqrt',n_estimators=30,random_state=51966,subsample=0.8)
+description: Base GBDT achieve about 50% mape
+id: GradientBoostingRegressor_565165fc-178f-4cf4-9db7-9b2f810ea820
+imports: sklearn.ensemble._gb
+name: GradientBoostingRegressor
