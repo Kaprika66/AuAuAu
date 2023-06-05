@@ -1,16 +1,35 @@
-"""This module contains functions used for comments parsing.
+"""This module contains functions used for input parsing.
 """
+import functools
+import re
 
 import ase
+import ase.io
 import joblib
 import pandas as pd
 
-__all__ = ["get_comments_df", "read_raw_data"]
+__all__ = ["get_comments_df", "read_raw_data", "parse_feature_name"]
 
 
-# def parse_feature_name(feature_name: str) -> tuple[str, tuple]:
-#     #ToDo
-#     raise NotImplementedError("This function still needed to be implemented")
+def parse_feature_name(feature_signature: str) -> dict[str, tuple]:
+    """Parses feature name into dict that store function alias
+        and atoms idxs that were used in feature generation.
+
+    Args:
+        feature_name (str): Name of feature.
+
+    Returns:
+        dict[str, tuple]: dict with two keys:
+            alias store feature name
+            atoms_idxs store idxs used in feature generation.
+    """
+    args = re.findall(r"\d+", feature_signature)
+    feature_alias = re.match(r"^[a-z_]+", feature_signature).group()
+    return {
+        "signature": feature_signature,
+        "alias": feature_alias,
+        "atoms_idxs": tuple(int(arg) for arg in args)
+    }
 
 def read_raw_data(
     particles_path: str, transports_path: str, cache_path: str
@@ -34,7 +53,7 @@ def read_raw_data(
         })
     return cached_reader(particles_path, transports_path)
 
-
+@functools.cache
 def get_comments_df(file_path: str) -> pd.DataFrame:
     """Load and parse xyz file. This is not general purpose function!
     It is designed to work with xyz file that contains:
@@ -74,3 +93,12 @@ def _load_lines_after_specified_one(path: str, specified_line: str) -> list[str]
                 comments.append(line.strip())
             next_line_is_comment = line == specified_line
     return comments
+
+
+def main():
+    print(parse_feature_name("dstC12C1"))
+    print(parse_feature_name("angC2Au11Au1"))
+    print(parse_feature_name("benzene_distance"))
+
+if __name__ == "__main__":
+    main()
