@@ -681,6 +681,18 @@ paramiko = ["paramiko"]
 pgp = ["gpg"]
 
 [[package]]
+name = "dynamic-factory"
+version = "0.1.9"
+description = "This module contain dynamic implementations of factory pattern"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "dynamic_factory-0.1.9-py3-none-any.whl", hash = "sha256:5dfb3be21828d5a2e9b1f50f96bf8e305059b799014c8bcec72d5d2b0c7be4f0"},
+    {file = "dynamic_factory-0.1.9.tar.gz", hash = "sha256:48cb48c05592e1e9556b4617d7a1231f3d747b5feec5208a884d05aa8565e0ba"},
+]
+
+[[package]]
 name = "executing"
 version = "1.2.0"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -3434,4 +3446,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "ff4fc58f07a0e3616ad0ebf996bff58492280a7b0dc0081863b38abd8f0c953f"
+content-hash = "c114a045e5093f294a330d9e9aac4a753daf4aa518c56519aad419af6a8938a3"
