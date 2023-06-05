@@ -1,0 +1,9 @@
+name: auau_env
+
+dependencies:
+- python=3.10
+- ipykernel
+- pip
+- pip:
+  - poetry
+  - tomli

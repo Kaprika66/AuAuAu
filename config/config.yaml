@@ -1,0 +1,7 @@
+defaults:
+  - features: base
+  - model: GradientBoostingRegressor_base
+
+
+seed:
+  0xCAFE
